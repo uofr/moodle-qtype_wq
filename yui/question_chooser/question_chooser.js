@@ -18,7 +18,7 @@ YUI.add('moodle-qtype_wq-question_chooser', function(Y) {
          * Start point.
          * */
         init: function() {
-            this.wiris_section();
+			this.wiris_section();
         },
         /**
          * Moves all Wiris Quizzes questions under node_before and populates the array
@@ -37,6 +37,19 @@ YUI.add('moodle-qtype_wq-question_chooser', function(Y) {
             });
             this.wirisquestions = wirisdivs;
         },
+		/**
+		 * Moves all Wiris Quizzes questions. Modified to work with U of R chooser.
+		 * Appends wiris quizzes types to the end of the list so they are grouped together.
+		 */
+		move_wiris_questions_ur: function() {
+			var question_type_list = Y.one('#modchooser_questions ul');
+			Y.all('li.mod-option').each(function(node) {
+				var input = node.one('div.option input');
+				if (input && input.getAttribute('value') && input.getAttribute('value').indexOf('wiris') !== -1) {
+					question_type_list.append(node);
+				}
+			});
+		},
         /**
          * Unused function. Join all Wiris Quizzes questions in a section after
          * QUESTIONS and before OTHER.
@@ -47,16 +60,18 @@ YUI.add('moodle-qtype_wq-question_chooser', function(Y) {
             if(label){
                 // Convert qtype option into section title and move to the bottom.
                 var wq = label.ancestor('div');
-                var name = wq.one('span.typename').remove(false);
-                var summary = wq.one('span.typesummary').remove(false);
-                wq.one('label').remove(true);
-                wq.append(name).append(summary).addClass('moduletypetitle');
-                var container = wq.ancestor();
+                //var name = wq.one('span.typename').remove(false);
+                //var summary = wq.one('span.typesummary').remove(false);
+                //wq.one('label').remove(true);
+                //wq.append(name).append(summary).addClass('moduletypetitle');
+                //var container = wq.ancestor();
+				wq.ancestor('li').remove();
                 wq.remove();
-                container.insertBefore(wq, container.one('div.separator'));
-                container.insertBefore(Y.Node.create('<div class="separator"/>'),wq);
+                //container.insertBefore(wq, container.one('div.separator'));
+                //container.insertBefore(Y.Node.create('<div class="separator"/>'),wq);
                 // Move all Wiris qtypes under title.
-                this.move_wiris_questions(wq);
+                //this.move_wiris_questions(wq);
+				this.move_wiris_questions_ur();
             }
         },
     }
